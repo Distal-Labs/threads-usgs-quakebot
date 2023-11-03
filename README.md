@@ -1,9 +1,11 @@
 # USGS Quakebot
 
 [![License](https://img.shields.io/badge/License-AGPL--3.0-yellow.svg)](https://github.com/Distal-Labs/threads-usgs-quakebot/blob/main/LICENSE)
-[![Release](https://img.shields.io/github/release/Distal-Labs/threads-usgs-quakebot.svg?label=Release)](https://gitHub.com/Distal-Labs/threads-usgs-quakebot/releases/)
+![GitHub package.json version (subfolder of monorepo)](https://img.shields.io/github/package-json/v/Distal-Labs/threads-usgs-quakebot)
+![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Distal-Labs/threads-usgs-quakebot)
+![GitHub release (with filter)](https://img.shields.io/github/v/release/Distal-Labs/threads-usgs-quakebot)
 
-**USGS Quakebot** is serverless web service that polls the [U.S. Geological Survey](https://www.usgs.gov)'s real-time earthquake feed every minute, then parses and filters the [GeoJSON object](https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php) in order to identify earthquakes of at least magnitude 3.0 located within the Conterminous U.S.[^1]. When the service detects a new earthquake, it will attempt to publish a summary of the event to Instagram's microblogging service, [Threads](https://www.threads.net).[^2] Making an HTTP request to the service's web root (e.g. `/`) will return the content of the most recent Threads post attempted by the service; if no earthquakes have been detected within the last 24 hours, then a message conveying this fact will be returned instead.
+**USGS Quakebot** is a serverless web service that polls the [U.S. Geological Survey](https://www.usgs.gov)'s real-time earthquake feed every minute, then parses and filters the [GeoJSON object](https://earthquake.usgs.gov/earthquakes/feed/v1.0/geojson.php) in order to identify earthquakes of at least magnitude 3.0 located within the Conterminous U.S.[^1]. When the service detects a new earthquake, it will attempt to publish a summary of the event to Instagram's microblogging service, [Threads](https://www.threads.net).[^2] Making an HTTP request to the service's web root (e.g. `/`) will return the content of the most recent Threads post attempted by the service; if no earthquakes have been detected within the last 24 hours, then a message conveying this fact will be returned instead.
 
 - [Requirements](#requirements)
 - [Usage](#usage)
