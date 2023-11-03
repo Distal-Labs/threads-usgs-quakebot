@@ -115,14 +115,14 @@ export const fetchAndProcessLatestQuakes = async (isCron: boolean = true) => {
           const eventTime = new Date(feature.properties.time)
           if (feature.properties.title) {
             posts.push(
-              `#earthquake reported by @usgs_quakes: ${feature.properties.title} on ${
-                eventTime.toLocaleDateString() + ' at ' + eventTime.toLocaleTimeString()
+              `#earthquake reported by @usgs_quakes: ${feature.properties.title} at ${
+                eventTime.toISOString()
               } | Event details available at ${feature.properties.url}`
             )
           } else {
             posts.push(
-              `#earthquake reported by @usgs_quakes: M ${feature.properties.mag} - ${feature.properties.place} on ${
-                eventTime.toLocaleDateString() + ' at ' + eventTime.toLocaleTimeString()
+              `#earthquake reported by @usgs_quakes: M ${feature.properties.mag} - ${feature.properties.place} at ${
+                eventTime.toISOString()
               } | Event details available at ${feature.properties.url}`
             )
           }
