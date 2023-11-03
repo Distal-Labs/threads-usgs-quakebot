@@ -189,11 +189,11 @@ export const Preview = (postText: string) => {
                     >
                       ${raw(
                         postText
-                          .replace(RegExp(' [|] ', 'gi'), '<br><br>')
                           .replace(
-                            RegExp('(https://earthquake.usgs.gov/earthquakes/eventpage/[\\S]+)'),
+                            RegExp('(https://earthquake.usgs.gov/earthquakes/eventpage/[^\\s]+)'),
                             '<a href="$1" target="_blank" title="Visit the USGS for the latest information">$1</a>'
                           )
+                          .replace(RegExp(' [|] ', 'gi'), '<br><br>')
                       )}
                     </span>
                   </div>
