@@ -18,7 +18,6 @@
   "scripts": {
     "deploy:preview": "wrangler deploy --env=preview src/index.ts",
     "deploy:prod":    "wrangler deploy --env=production src/index.ts",
-    "deploy": "pnpm deploy:prod",
     "dev:preview": "wrangler dev src/index.ts --port 8787 --persist-to=./.wrangler/state --env=preview --test-scheduled --log-level=debug",
     "dev:prod":    "wrangler dev src/index.ts --port 8787 --persist-to=./.wrangler/state --env=production --test-scheduled --log-level=log",
     "dev": "pnpm dev:prod",
