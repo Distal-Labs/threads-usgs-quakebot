@@ -17,9 +17,7 @@ const isEventInContUS = (feature: GeoJSONFeature): boolean => {
 }
 
 const isEventTimeWithinLastMinute = (feature: GeoJSONFeature): boolean => {
-  const oneMinuteAgo = new Date(Date.now() - 60000)
-
-  return feature.properties.time > oneMinuteAgo
+  return feature.properties.time > (Date.now() - 60000)
 }
 
 const postToThreads = async (env: Env, postText: string): Promise<number> => {
@@ -108,24 +106,28 @@ export const fetchAndProcessLatestQuakes = async (isCron: boolean = true) => {
       }
       for (const feature of onlyUSEvents) {
         if (!isCron && posts.length > 0) {
-          console.debug(`Skipping further processing`)
+          console.debug('Skipping further processing')
           break
         }
         if (isEventTimeWithinLastMinute(feature) || !isCron) {
-          const eventTime = new Date(feature.properties.time)
-          if (feature.properties.title) {
-            posts.push(
-              `#earthquake reported by @usgs_quakes: ${feature.properties.title} at ${
-                eventTime.toISOString()
-              } | Event details available at ${feature.properties.url}`
-            )
-          } else {
-            posts.push(
-              `#earthquake reported by @usgs_quakes: M ${feature.properties.mag} - ${feature.properties.place} at ${
-                eventTime.toISOString()
-              } | Event details available at ${feature.properties.url}`
-            )
-          }
+          const localeOptions = { 
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+            hour12: true,
+            timeZoneName: "short",
+            timeZone: "America/New_York"
+          };
+          const eventTimeString = (new Date(feature.properties.time).toLocaleString('en-US', localeOptions)).split(', ')
+          posts.push(
+            `M ${feature.properties.mag} earthquake located ${feature.properties.place} was reported by the U.S. Geological Survey on ${
+              eventTimeString[0] + ' at ' + eventTimeString[1]
+            } | ${feature.properties.status === 'automatic' ? 'This report is a preliminary assessment and is subject to change. ' : ''}For the latest details visit the USGS (@usgs_quakes) event page at ${feature.properties.url}
+            | NOTICE: this automated account only posts notifications for earthquakes of magnitude 2.5+ that are located within the contiguous U.S.`
+          )
         }
       }
       return
@@ -172,7 +174,7 @@ export const Preview = (postText: string) => {
                       dir="auto"
                       style="line-height: var(--base-line-clamp-line-height); --base-line-clamp-line-height: calc(1.4 * 1em);"
                     >
-                      ${raw(postText.replace(' | ', '<br><br>'))}
+                      ${raw(postText.replace(' | ', '<br><br>').replace('|', '<br>').replace(RegExp('(https:\/\/earthquake\.usgs\.gov\/earthquakes\/eventpage\/.+)'), '<a href="$1" target="_blank" title="Visit the USGS detail page for this event">$1</a>'))}
                     </span>
                   </div>
                   <div class="x1orzsq4 x1k70j0n">

@@ -78,6 +78,8 @@ const handler: ExportedHandler = {
           })
       }
       ctx.waitUntil(postAllQuakes()) // Post to Threads, but don't block response
+    } else {
+      console.debug(`CRON | ${event.cron} | Nothing to post`)
     }
   },
 
