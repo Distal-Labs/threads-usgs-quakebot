@@ -1,6 +1,6 @@
 {
   "name": "threads-usgs-quakebot",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "author": {
     "name": "Jorge A. Caballero, MD",
     "url": "https://www.jorgecaballero.com/"
@@ -18,12 +18,11 @@
   "scripts": {
     "deploy:preview": "wrangler deploy --env=preview src/index.ts",
     "deploy:prod":    "wrangler deploy --env=production src/index.ts",
-    "dev:preview": "wrangler dev src/index.ts --port 8787 --persist-to=./.wrangler/state --env=preview --test-scheduled --log-level=log",
+    "deploy": "pnpm deploy:prod",
+    "dev:preview": "wrangler dev src/index.ts --port 8787 --persist-to=./.wrangler/state --env=preview --test-scheduled --log-level=debug",
     "dev:prod":    "wrangler dev src/index.ts --port 8787 --persist-to=./.wrangler/state --env=production --test-scheduled --log-level=log",
-    "lint": "run-s lint:types lint:src --print-label",
-    "lint:src": "npx eslint src",
-    "lint:tests": "npx eslint tests",
-    "lint:types": "npx eslint types",
+    "dev": "pnpm dev:prod",
+    "lint": "npx eslint src",
     "pretty": "prettier --write './**/*.ts'",
     "tail:preview": "wrangler --env=preview tail",
     "tail:prod": "wrangler --env=production tail",

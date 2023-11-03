@@ -17,7 +17,7 @@ const isEventInContUS = (feature: GeoJSONFeature): boolean => {
 }
 
 const isEventTimeWithinLastMinute = (feature: GeoJSONFeature): boolean => {
-  return feature.properties.time > (Date.now() - 60000)
+  return feature.properties.time > Date.now() - 60000
 }
 
 const isEventMagnitudeAtLeast3 = (feature: GeoJSONFeature): boolean => {
@@ -104,7 +104,9 @@ export const fetchAndProcessLatestQuakes = async (isCron: boolean = true) => {
       if (!featureCollection) {
         return
       }
-      const onlyReportableEvents = featureCollection.features.filter((x) => isEventInContUS(x) && isEventMagnitudeAtLeast3(x))
+      const onlyReportableEvents = featureCollection.features.filter(
+        (x) => isEventInContUS(x) && isEventMagnitudeAtLeast3(x)
+      )
       if (onlyReportableEvents.length === 0) {
         console.debug('No new events')
       }
@@ -114,23 +116,31 @@ export const fetchAndProcessLatestQuakes = async (isCron: boolean = true) => {
           break
         }
         if (isEventTimeWithinLastMinute(feature) || !isCron) {
-          const localeOptions = { 
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-            second: "numeric",
+          const localeOptions = {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
             hour12: true,
-            timeZoneName: "short",
-            timeZone: "America/New_York"
-          };
-          const eventTimeString = (new Date(feature.properties.time).toLocaleString('en-US', localeOptions)).split(', ')
-          const defaultPost = `${feature.properties.mag >= 4.0 ? '⚠️ M': 'M'}${feature.properties.mag} earthquake detected ${feature.properties.place} on ${eventTimeString[0] + ' at ' + eventTimeString[1]} | This reflects real-time data from the U.S. Geological Survey (@usgs_quakes) that is subject to change. Please consult the following USGS event page for the latest information ${feature.properties.url}`;
+            timeZoneName: 'short',
+            timeZone: 'America/New_York',
+          }
+          const eventTimeString = new Date(feature.properties.time).toLocaleString('en-US', localeOptions).split(', ')
+          const defaultPost = `${feature.properties.mag >= 4.0 ? '⚠️ M' : 'M'}${
+            feature.properties.mag
+          } earthquake detected ${feature.properties.place} on ${
+            eventTimeString[0] + ' at ' + eventTimeString[1]
+          } | This reflects real-time data from the U.S. Geological Survey (@usgs_quakes) that is subject to change. Please consult the following USGS event page for the latest information ${
+            feature.properties.url
+          }`
 
-          (defaultPost.length < 375)
-            ? posts.push(`${defaultPost} | 👀 This bot only posts about M3.0+ earthquakes occurring within the Conterminous US (lower 48 states)`)
-            : posts.push(defaultPost);
+          defaultPost.length < 375
+            ? posts.push(
+                `${defaultPost} | 👀 This bot only posts about M3.0+ earthquakes occurring within the Conterminous US (lower 48 states)`
+              )
+            : posts.push(defaultPost)
         }
       }
       return
@@ -177,7 +187,14 @@ export const Preview = (postText: string) => {
                       dir="auto"
                       style="line-height: var(--base-line-clamp-line-height); --base-line-clamp-line-height: calc(1.4 * 1em);"
                     >
-                      ${raw(postText.replace(RegExp(' [|] ', 'gi'), '<br><br>').replace(RegExp('(https:\/\/earthquake\.usgs\.gov\/earthquakes\/eventpage\/[\\S]+)'), '<a href="$1" target="_blank" title="Visit the USGS for the latest information">$1</a>'))}
+                      ${raw(
+                        postText
+                          .replace(RegExp(' [|] ', 'gi'), '<br><br>')
+                          .replace(
+                            RegExp('(https://earthquake.usgs.gov/earthquakes/eventpage/[\\S]+)'),
+                            '<a href="$1" target="_blank" title="Visit the USGS for the latest information">$1</a>'
+                          )
+                      )}
                     </span>
                   </div>
                   <div class="x1orzsq4 x1k70j0n">

@@ -26,6 +26,7 @@ module.exports = {
 	rules: {
 		'prefer-const': 'error',
 		'no-var': 'error',
+		'no-useless-escape': 'warn',
 		'@typescript-eslint/no-unsafe-return': 'error',
 		'@typescript-eslint/no-unused-vars': 'warn',
 		// 'no-console': 'off',
@@ -34,7 +35,7 @@ module.exports = {
 		'@typescript-eslint/no-unsafe-call': 'error',
 		'@typescript-eslint/await-thenable': 'error',
     '@typescript-eslint/no-misused-promises': 'error',
-    '@typescript-eslint/no-extra-semi': 'warn',
+		'@typescript-eslint/no-extra-semi': 'warn',
 		/*
 			Note: the following rules have been set to off so that linting
 				  can pass with the current code, but we need to gradually
