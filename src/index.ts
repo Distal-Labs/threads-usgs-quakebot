@@ -49,7 +49,7 @@ bot
     const latestQuakes = await fetchAndProcessLatestQuakes(false)
     if (latestQuakes.length === 0) {
       return c.text(
-        'There have been no earthquakes of magnitude 2.5+ in the contiguous United States within the last day.'
+        'The U.S. Geological Survey has no reports of earthquakes within the last day that meet the threshold for this bot. This bot only posts about M3.0+ earthquakes occurring within the Conterminous US (lower 48 states).'
       )
     }
     return c.html(Preview(latestQuakes[0]))

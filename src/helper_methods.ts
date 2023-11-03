@@ -20,6 +20,10 @@ const isEventTimeWithinLastMinute = (feature: GeoJSONFeature): boolean => {
   return feature.properties.time > (Date.now() - 60000)
 }
 
+const isEventMagnitudeAtLeast3 = (feature: GeoJSONFeature): boolean => {
+  return feature.properties.mag >= 3.0
+}
+
 const postToThreads = async (env: Env, postText: string): Promise<number> => {
   const igUserId = env.THREADS_IG_USER_ID
   const threadsAPIAccessToken = env.THREADS_API_ACCESS_TOKEN
@@ -100,11 +104,11 @@ export const fetchAndProcessLatestQuakes = async (isCron: boolean = true) => {
       if (!featureCollection) {
         return
       }
-      const onlyUSEvents = featureCollection.features.filter((x) => isEventInContUS(x))
-      if (onlyUSEvents.length === 0) {
+      const onlyReportableEvents = featureCollection.features.filter((x) => isEventInContUS(x) && isEventMagnitudeAtLeast3(x))
+      if (onlyReportableEvents.length === 0) {
         console.debug('No new events')
       }
-      for (const feature of onlyUSEvents) {
+      for (const feature of onlyReportableEvents) {
         if (!isCron && posts.length > 0) {
           console.debug('Skipping further processing')
           break
@@ -122,12 +126,11 @@ export const fetchAndProcessLatestQuakes = async (isCron: boolean = true) => {
             timeZone: "America/New_York"
           };
           const eventTimeString = (new Date(feature.properties.time).toLocaleString('en-US', localeOptions)).split(', ')
-          posts.push(
-            `M ${feature.properties.mag} earthquake located ${feature.properties.place} was reported by the U.S. Geological Survey on ${
-              eventTimeString[0] + ' at ' + eventTimeString[1]
-            } | ${feature.properties.status === 'automatic' ? 'This report is a preliminary assessment and is subject to change. ' : ''}For the latest details visit the USGS (@usgs_quakes) event page at ${feature.properties.url}
-            | NOTICE: this automated account only posts notifications for earthquakes of magnitude 2.5+ that are located within the contiguous U.S.`
-          )
+          const defaultPost = `${feature.properties.mag >= 4.0 ? '⚠️ M': 'M'}${feature.properties.mag} earthquake detected ${feature.properties.place} on ${eventTimeString[0] + ' at ' + eventTimeString[1]} | This reflects real-time data from the U.S. Geological Survey (@usgs_quakes) that is subject to change. Please consult the following USGS event page for the latest information ${feature.properties.url}`;
+
+          (defaultPost.length < 375)
+            ? posts.push(`${defaultPost} | 👀 This bot only posts about M3.0+ earthquakes occurring within the Conterminous US (lower 48 states)`)
+            : posts.push(defaultPost);
         }
       }
       return
@@ -174,7 +177,7 @@ export const Preview = (postText: string) => {
                       dir="auto"
                       style="line-height: var(--base-line-clamp-line-height); --base-line-clamp-line-height: calc(1.4 * 1em);"
                     >
-                      ${raw(postText.replace(' | ', '<br><br>').replace('|', '<br>').replace(RegExp('(https:\/\/earthquake\.usgs\.gov\/earthquakes\/eventpage\/.+)'), '<a href="$1" target="_blank" title="Visit the USGS detail page for this event">$1</a>'))}
+                      ${raw(postText.replace(RegExp(' [|] ', 'gi'), '<br><br>').replace(RegExp('(https:\/\/earthquake\.usgs\.gov\/earthquakes\/eventpage\/[\\S]+)'), '<a href="$1" target="_blank" title="Visit the USGS for the latest information">$1</a>'))}
                     </span>
                   </div>
                   <div class="x1orzsq4 x1k70j0n">
