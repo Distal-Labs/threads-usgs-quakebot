@@ -1,0 +1,49 @@
+{
+  "name": "threads-usgs-quakebot",
+  "version": "0.1.0",
+  "author": {
+    "name": "Jorge A. Caballero, MD",
+    "url": "https://www.jorgecaballero.com/"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "engines": {
+    "node": ">=20.9.0",
+    "pnpm": ">=8.10.2"
+  },
+  "repository": "github:Distal-Labs/threads-usgs-quakebot",
+  "hasShowcase": false,
+  "type": "module",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": {
+    "deploy:preview": "wrangler deploy --env=preview src/index.ts",
+    "deploy:prod":    "wrangler deploy --env=production src/index.ts",
+    "dev:preview": "wrangler dev src/index.ts --port 8787 --persist-to=./.wrangler/state --env=preview --test-scheduled --log-level=log",
+    "dev:prod":    "wrangler dev src/index.ts --port 8787 --persist-to=./.wrangler/state --env=production --test-scheduled --log-level=log",
+    "lint": "run-s lint:types lint:src --print-label",
+    "lint:src": "npx eslint src",
+    "lint:tests": "npx eslint tests",
+    "lint:types": "npx eslint types",
+    "pretty": "prettier --write './**/*.ts'",
+    "tail:preview": "wrangler --env=preview tail",
+    "tail:prod": "wrangler --env=production tail",
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "latest",
+    "@types/jest": "latest",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "esbuild": "latest",
+    "esbuild-jest": "latest",
+    "eslint": "latest",
+    "jest": "latest",
+    "jest-environment-miniflare": "latest",
+    "prettier": "latest",
+    "ts-jest": "latest",
+    "wrangler": "latest"
+  },
+  "dependencies": {
+    "hono": "latest"
+  }
+}

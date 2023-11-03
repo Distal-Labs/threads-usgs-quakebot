@@ -1,0 +1,29 @@
+main = "src/index.ts"
+compatibility_date = "2023-05-15"
+workers_dev = false
+node_compat = false
+send_metrics = false
+keep_vars = true
+
+# Secrets
+# THREADS_IG_USER_ID
+# THREADS_API_ACCESS_TOKEN
+
+routes = [
+	{ pattern = "quakebot.distallabs.com", custom_domain = true }
+]
+
+[triggers]
+# Schedule cron trigger every minute
+crons = [ "* * * * *" ]
+
+[env.production]
+name = "threads-usgs-quakebot"
+
+[env.production.vars]
+WRANGLER_LOG='info'
+
+[env.preview]
+
+[env.preview.vars]
+WRANGLER_LOG='debug'

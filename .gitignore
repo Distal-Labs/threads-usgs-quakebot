@@ -128,3 +128,22 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Node stuff
+node_modules
+package-lock.json
+build
+dist
+output
+.yarn
+.pnpm
+.cache
+pnpm-lock.yaml
+
+# Wrangler/Cloudflare stuff
+**/*/.wrangler/*/**
+.wrangler/
+!**/*/.gitkeep
+
+# Project-specific
+etl/etl_parameters.py
